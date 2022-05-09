@@ -20,6 +20,8 @@ I made a lot of changes:
 4. Removes SenseHat and justs uses two GPIO pins as indicators.
 5. Whole bunch of refactoring, renaming and clean up.
 6. Uses native RPI camera.
+7. Uses Tensorflow Lite models
+8. Revised packages for Tensorflow Lite support
 
 To enable native RPI camera you need to add the following line to the /boot/firmware/config.txt file:
 
@@ -30,6 +32,8 @@ I also wired two LEDS to GPIO 20 and 21 on the RPI.
 A RED led to GPIO 20 for Apple detection indication
 
 A YELLOW led to GPIO 21 for Banana detection indication
+
+When exporting model from Custom Vision web site use the android->Tensorflow lite selection
 
 This is a sample showing how to deploy a Custom Vision model to a Raspberry Pi 4 device running Azure IoT Edge. Custom Vision is an image classifier that is trained in the cloud with your own images. IoT Edge gives you the possibility to run this model next to your cameras, where the video data is being generated. You can thus add meaning to your video streams to detect road traffic conditions, estimate wait lines, find parking spots, etc. while keeping your video footage private, lowering your bandwidth costs and even running offline.
 

@@ -3,12 +3,8 @@
 # Install Python packages
 COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
-RUN pip install tensorflow
 
-RUN mkdir app
-COPY ./app/app-amd64.py ./app/app.py
-COPY ./app/predict-amd64.py ./app/predict.py
-COPY ./app/labels.txt ./app/model.pb ./app/
+COPY app /app
 
 # Expose the port
 EXPOSE 80

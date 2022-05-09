@@ -92,17 +92,25 @@ namespace DisplayIO
 
         public class RxMessage
         {
+            public class BoundingBox
+            {
+                public double height { get; set; }
+                public double left { get; set; }
+                public double top { get; set; }
+                public double width { get; set; }
+            }
+
             public class Predictions
             {
-                public string boundingBox { get; set; }
+                public BoundingBox boundingBox { get; set; }
                 public double probability { get; set; }
-                public string tagId { get; set; }
+                public int tagId { get; set; }
                 public string tagName { get; set; }
             }
 
             public DateTimeOffset created { get; set; }
             public string id { get; set; }
-            public string itteration { get; set; }
+            public string iteration { get; set; }
             public IList<Predictions> predictions { get; set; }
             public string project { get; set; }
 
@@ -137,7 +145,8 @@ namespace DisplayIO
         static async Task<MessageResponse> receiveMessage(Message message, object userContext)
         {
             int counterValue = Interlocked.Increment(ref counter);
-            bool hit = false;
+            bool Applehit = false;
+            bool Bananahit = false;
 
             var moduleClient = userContext as ModuleClient;
             if (moduleClient == null)
@@ -156,37 +165,30 @@ namespace DisplayIO
 
                 foreach (var predicts in rxMessage.predictions)
                 {
-                    if (0 == string.Compare(predicts.tagName, "Apple"))
+                    if (0 == string.Compare(predicts.tagName, "apple"))
                     {
                         if (predicts.probability > threshold)
                         {
-                            hit = true;
+                            Applehit = true;
                             string probabilityS = String.Format("{0:0.00}", predicts.probability);
                             Console.WriteLine("tagID: " + predicts.tagName + " Probability: " + probabilityS);
-                            Led(true, GPIO_A);
-                        }
-                        else
-                        {
-                            Led(false, GPIO_A);
                         }
                     }
-                    if (0 == string.Compare(predicts.tagName, "Banana"))
+                    if (0 == string.Compare(predicts.tagName, "banana"))
                     {
                         if (predicts.probability > threshold)
                         {
-                            hit = true;
+                            Bananahit = true;
                             string probabilityS = String.Format("{0:0.00}", predicts.probability);
                             Console.WriteLine("tagID: " + predicts.tagName + " Probability: " + probabilityS);
-                            Led(true, GPIO_B);
-                        }
-                        else
-                        {
-                            Led(false, GPIO_B);
                         }
                     }
                 }
 
-                if (hit || telemeterAll)
+                Led(Applehit, GPIO_A);
+                Led(Bananahit, GPIO_B);
+
+                if (Applehit || Bananahit || telemeterAll)
                 {
                     using (var pipeMessage = new Message(messageBytes))
                     {
